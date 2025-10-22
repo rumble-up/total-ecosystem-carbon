@@ -98,7 +98,7 @@ class CarbonStats:
         conn = sqlite3.connect(output_path)
         df.to_sql(table_name, conn, if_exists="replace", index=False)
         conn.close()
-
+        print('Successfully exported to', output_path)
         return output_path
 
 def main():
