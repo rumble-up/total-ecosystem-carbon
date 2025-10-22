@@ -19,8 +19,7 @@ total-ecosystem-carbon/
 │   │   ├── NLS_TotalEcosystemCarbon2020.tif
 │   │   └── US_census_counties/ #Shapefile of US 2024 administrative county polygons 
 │   └── outputs/              # Generated output files, for now the processed database is stored here
-├── A. Quick Start...ipynb   # Jupyter notebook for using pipeline with an SQL example
-├── B. Initial Exploration...ipynb   # Jupyter notebook with my original exploration and pipeline prototyping
+├── *.ipynb                   # Jupyter notebooks with examples an the original thought process behind building the pipeline
 ├── carbon_stats.py          # Main processing module
 └── requirements.txt         # Python package dependencies
 ```
@@ -112,14 +111,14 @@ Here are some of the next steps to improve this pipeline.
 1. **Change SQLite for PostGres with PostGIS** - SQLite is not the best choice for a GIS database, PostGres with PostGIS would have been better for working with geospatial data and queries. However, the purpose of this exercise was to build something simple and quick that another person could easily run locally. SQLite is nice for this because it is already included in Python and is easy to share with others.
 
 2. **Make the pipeline flexible for adding new raster data to the database** - The NCFMS dataset has multiple interesting rasters.  It would be great if a user could select a new raster, and add the data to the database. As long as the rasters are carbon data recorded in the same units, this should be possible.  The database could have two tables:
-    a. `county_info` table with county specific information, for example, these columns:
+    1. `county_info` table with county specific information, for example, these columns:
         - `geoid`: County GEOID (unique identifier)
         - `county_name`: Name of the county
         - `state_name`: Name of the state
         - `county_area_acres`: County area in acres
         - `geometry_wkt_EPSG_4326`: County boundary geometry in WKT format (EPSG:4326)  
           
-    b. `carbon_data` table with raster statistics within each county.  This table would have a long, melted format to facilitate adding more raster data on the fly to the same database structure.  For example, columns like these:
+    2. `carbon_data` table with raster statistics within each county.  This table would have a long, melted format to facilitate adding more raster data on the fly to the same database structure.  For example, columns like these:
         - `geoid`: County GEOID (unique identifier)
         - `year`: NCFMS dataset has 2020 data and then 2050 and 2070 projections
         - `raster_type`: The type of raster summarized, for example AbovegroundBiomass, LiveBiomass, SoilCarbon
