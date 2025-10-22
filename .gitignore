@@ -5,3 +5,4 @@ __pycache__/
 # Ignore large .tif file
 data/inputs/NLS_TotalEcosystemCarbon2020.tif
 
+.ipynb_checkpoints/
