@@ -1,4 +1,4 @@
-# Total Ecosystem Carbon Pipeline for Summarizing by County
+# Pipeline to Summarize Total Ecosystem Carbon by County
 
 This repository contains a reproducible Python pipeline that summarizes the National Forest Carbon Monitoring System (NFCMS) "Total Ecosystem Carbon" by county and writes the results to a database.  
 
@@ -39,6 +39,8 @@ total-ecosystem-carbon/
 
 
 ### Replicating the pipeline locally
+If you wish to replicate and run the whole pipeline locally, please follow these steps:  
+  
 1. Clone the repository to your local computer:
 ```bash
 git clone https://github.com/rumble-up/total-ecosystem-carbon.git
