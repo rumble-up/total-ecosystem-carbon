@@ -12,7 +12,7 @@ Each pixel in the image represents a 30m x 30m square which is over 282 million 
 <img width="650"  alt="Original raster visualization" src="https://github.com/user-attachments/assets/df96d603-130a-442f-8d21-28b49eaa2664" />
 
 This pipeline condenses the information to a database with a single total for each county, which is visualized below.  
-The output database has 262 rows of vector data, one for each county. That's quite a big change from 282 million datapoints to 262.  
+The output database has 242 rows of vector data, one for each county. That's quite a big change from 282 million datapoints to 242.  
 This transformation from raster data to a smaller vector dataset helps make the dataset faster, easier, and lighter to work with for information at the county level.  
 <img width="650"  alt="Output totals per county visualization" src="https://github.com/user-attachments/assets/f27605a6-b01d-49b3-b0af-1d334ff840ae" />
 
