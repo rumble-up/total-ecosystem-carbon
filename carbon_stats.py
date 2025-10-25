@@ -1,16 +1,15 @@
-import geopandas as gpd
-import pandas as pd
-from rasterstats import zonal_stats
-import rasterio
 import os
 import sqlite3
+import geopandas as gpd
+import rasterio
+from rasterstats import zonal_stats
+
+# Constants
+SQ_M_IN_ACRE = 4046.86
+# each pixel is 30m x 30m = 900 sq meters
+PIXEL_AREA_ADJUST = 900 / SQ_M_IN_ACRE
 
 class CarbonStats:
-    # Constants
-    SQ_M_IN_ACRE = 4046.86
-    SQ_M_IN_SQ_MILE = 2589988.11
-    # each pixel is 30m x 30m = 900 sq meters
-    PIXEL_AREA_ADJUST = 900 / SQ_M_IN_ACRE
 
     def __init__(self, raster_file, boundary_file, raster_nodata=65535, export_crs="EPSG:4326"):
         self.raster_file = raster_file
@@ -38,7 +37,7 @@ class CarbonStats:
             mask = self.gdf['STATE_NAME'].isin(state_filter)
             self.gdf = self.gdf[mask]
 
-        # Project to match raster CRS
+        # Project polygon boundary CRS to match raster CRS
         if not self.raster_crs:
             self.read_raster()
         self.gdf = self.gdf.to_crs(self.raster_crs)
@@ -54,23 +53,31 @@ class CarbonStats:
         stats = zonal_stats(self.gdf, self.raster_file, stats=["sum"], nodata=self.raster_nodata)
         self.gdf["raster_sum"] = [s["sum"] for s in stats]
 
+    
         # Calculate derived statistics
-        self.gdf['Mg_CO2e'] = self.gdf['raster_sum'] * self.PIXEL_AREA_ADJUST
+        self.gdf['Mg_CO2e'] = self.gdf['raster_sum'] * PIXEL_AREA_ADJUST
         self.gdf['Tg_CO2e'] = self.gdf['Mg_CO2e'] / 1e6  # convert from Mg to Tg
-        self.gdf['county_area_sq_miles'] = self.gdf.geometry.area / self.SQ_M_IN_SQ_MILE
-        self.gdf['county_area_acres'] = self.gdf.geometry.area / self.SQ_M_IN_ACRE
+        self.gdf['county_area_acres'] = self.gdf.geometry.area / SQ_M_IN_ACRE
         self.gdf['average_Mg_CO2e_per_acre'] = self.gdf['Mg_CO2e'] / self.gdf['county_area_acres']
 
         return self.gdf
 
     def prepare_for_export(self):
-        """Prepare data for SQLite export"""
+        """Prepare data for SQLite export. SQLite does not support geometry columns,
+        so we convert geometries to WKT format (text) which will preserve spatial 
+        information in the SQLite database in a text format."""
         # Select and rename columns
-        keep_cols = ['GEOID', 'NAME', 'STATE_NAME', 'Tg_CO2e', 
-                    'average_Mg_CO2e_per_acre', 'county_area_acres', 'geometry']
+        keep_cols = [# Columns from Census boundary file
+                    'GEOID', 'NAME', 'STATE_NAME', 
+                    # Columns calculated in this pipeline
+                    'Tg_CO2e', 'average_Mg_CO2e_per_acre', 'county_area_acres', 
+                    # Geometry column from Census boundary file
+                    'geometry']
+        # Select columns of interest and reproject to export CRS
         gdf_for_sql = self.gdf[keep_cols].to_crs(self.export_crs)
 
         # Convert to database-friendly format
+        # Drop geopandas geometry column and add WKT text column
         df = gdf_for_sql.drop(columns="geometry").copy()
         geom_column_name = f"geometry_wkt_{self.export_crs.replace(':', '_')}"
         df[geom_column_name] = gdf_for_sql.geometry.to_wkt()
@@ -99,7 +106,7 @@ class CarbonStats:
         df.to_sql(table_name, conn, if_exists="replace", index=False)
         conn.close()
         print('Successfully exported to', output_path)
-        return output_path
+        
 
 def main():
     # Example usage
