@@ -32,7 +32,7 @@ The final SQLite database contains a single table `county_carbon` with the follo
 - `geoid`: County GEOID (unique identifier)
 - `county_name`: Name of the county
 - `state_name`: Name of the state
-- `total_Tg_CO2e`: Total carbon within the county in Teragrams CO2 equivalent
+- `total_Tg_CO2e`: Total carbon within the county in Teragrams CO2 equivalent (million metric tons CO2e)
 - `average_Mg_CO2e_per_acre`: Average carbon per acre in Megagrams CO2 equivalent (metric tons CO2e)
 - `county_area_acres`: County area in acres
 - `geometry_wkt_EPSG_4326`: County boundary geometry in WKT format (EPSG:4326)
@@ -97,7 +97,7 @@ pip install -r requirements.txt
      cs.calculate_stats()
      cs.export_to_sqlite("data/outputs/county_carbon.sqlite")
      ```
-   3. You can use the pipeline within a Jupyter notebook. Check out the notebook in this repository for an example.
+   3. You can use the pipeline within a Jupyter notebook. Check out the notebook in this repository for an example of using the pipeline, or loading the SQLite database back into a pandas dataframe.
      - `A. Quick Start and SQL Query Examples.ipynb`
   
 6. Query the database
@@ -119,7 +119,7 @@ Here are some of the next steps to improve this pipeline.
 
 1. **Change SQLite for PostGres with PostGIS** - SQLite is not the best choice for a GIS database, PostGres with PostGIS would have been better for working with geospatial data and queries. However, the purpose of this exercise was to build something simple and quick that another person could easily run locally. SQLite is nice for this because it is already included in Python and is easy to share with others.
 
-2. **Improve speed by using a different raster processing library** - I learned through this project that `raster_stats.zonal_statistics` is fairly slow in processing large rasters.  If processing speed is important, then I would look at other alternatives for improving the speed of the calculations.  
+2. **Improve speed by using a different raster processing library** - I learned through this project that `raster_stats.zonal_statistics` is fairly slow in processing large rasters.  If processing speed is important, then I would look at other alternatives for improving the speed of the calculations, such as `rioxarray`. 
   
 2. **Make the pipeline flexible for adding new raster data to the database** - The NCFMS dataset has multiple interesting rasters.  It would be great if a user could select a new raster, and add the data to the database. As long as the rasters are carbon data recorded in the same units, this should be possible.  The database could have two tables:
     1. `county_info` table with county specific information, for example, these columns:
