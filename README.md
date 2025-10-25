@@ -27,7 +27,8 @@ total-ecosystem-carbon/
 │   ├── inputs/                         # Input data files
 │   │   ├── NLS_TotalEcosystemCarbon2020.tif
 │   │   └── US_census_counties/         #Shapefile of US 2024 administrative county polygons 
-│   └── outputs/                        # Generated output files, for now the processed database is stored here
+│   └── outputs/                        # Generated output files, for now the processed database is stored here,
+|                                       # also output html files for visualizations
 ├── A. Quick Start...ipynb              # Jupyter notebooks with examples for running the pipeline
 ├── B. Initial Exploration...ipynb      # My original assumptions and process behind building the pipeline
 ├── carbon_stats.py                     # Main processing module, where the pipeline code is
