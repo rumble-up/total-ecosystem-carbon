@@ -6,8 +6,17 @@ The input datasets for this demonstration are from the following sources:
 * [Zip file of NFCMS raster carbon data](https://usfs-public.box.com/shared/static/v861gwms9fq68sitl0r3vs2v3moxeu9x.zip)
 * [US Census County administrative boundaries](https://catalog.data.gov/dataset/2024-cartographic-boundary-file-kml-county-and-equivalent-for-united-states-1-500000)
 
-The area of focus is the Northern Lake States (NLS): Michigan, Minnesota, Wisconsin. Here is a visualization of the NFCMS original raster for Total Ecosystem Carbon in 2020.  
-<img width="1222" height="845" alt="image" src="https://github.com/user-attachments/assets/df96d603-130a-442f-8d21-28b49eaa2664" />
+The area of focus is the Northern Lake States (NLS): Michigan, Minnesota, Wisconsin. Below is a visualization of the NFCMS original raster for Total Ecosystem Carbon in 2020.  
+  
+Each pixel in the image represents a 30m x 30m square which is over 282 million pixels of data in this raster!  
+<img width="650"  alt="Original raster visualization" src="https://github.com/user-attachments/assets/df96d603-130a-442f-8d21-28b49eaa2664" />
+
+This pipeline condenses the information to a database with a single total for each county, which is visualized below.  
+The output database has 262 rows of vector data, one for each county. That's quite a big change from 282 million datapoints to 262.  
+This transformation from raster data to a smaller vector dataset helps make the dataset faster, easier, and lighter to work with for information at the county level.  
+<img width="650"  alt="Output totals per county visualization" src="https://github.com/user-attachments/assets/f27605a6-b01d-49b3-b0af-1d334ff840ae" />
+
+
 
 
 ## Project Structure
@@ -15,14 +24,14 @@ The area of focus is the Northern Lake States (NLS): Michigan, Minnesota, Wiscon
 ```
 total-ecosystem-carbon/
 ├── data/
-│   ├── inputs/               # Input data files
+│   ├── inputs/                         # Input data files
 │   │   ├── NLS_TotalEcosystemCarbon2020.tif
-│   │   └── US_census_counties/ #Shapefile of US 2024 administrative county polygons 
-│   └── outputs/              # Generated output files, for now the processed database is stored here
-├── A. Quick Start...ipynb    # Jupyter notebooks with examples for running the pipeline
-├── B. Initial Exploration...ipynb  # My original assumptions and process behind building the pipeline
-├── carbon_stats.py          # Main processing module, where the pipeline code is
-└── requirements.txt         # Python package dependencies
+│   │   └── US_census_counties/         #Shapefile of US 2024 administrative county polygons 
+│   └── outputs/                        # Generated output files, for now the processed database is stored here
+├── A. Quick Start...ipynb              # Jupyter notebooks with examples for running the pipeline
+├── B. Initial Exploration...ipynb      # My original assumptions and process behind building the pipeline
+├── carbon_stats.py                     # Main processing module, where the pipeline code is
+└── requirements.txt                    # Python package dependencies
 ```
 
 ## Output Database Schema
