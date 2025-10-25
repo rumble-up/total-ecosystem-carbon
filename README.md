@@ -13,6 +13,7 @@ Each pixel in the image represents a 30m x 30m square which is over 282 million 
 
 This pipeline condenses the information to a database with a single total for each county, which is visualized below.  
 The output database has 242 rows of vector data, one for each county. That's quite a big change from 282 million datapoints to 242.  
+  
 This transformation from raster data to a smaller vector dataset helps make the dataset faster, easier, and lighter to work with for information at the county level.  
 <img width="650"  alt="Output totals per county visualization" src="https://github.com/user-attachments/assets/f27605a6-b01d-49b3-b0af-1d334ff840ae" />
 
@@ -131,7 +132,7 @@ Here are some of the next steps to improve this pipeline.
 
 2. **Improve speed by using a different raster processing library** - I learned through this project that `raster_stats.zonal_statistics` is fairly slow in processing large rasters.  If processing speed is important, then I would look at other alternatives for improving the speed of the calculations, such as `rioxarray`. 
   
-2. **Make the pipeline flexible for adding new raster data to the database** - The NCFMS dataset has multiple interesting rasters.  It would be great if a user could select a new raster, and add the data to the database. As long as the rasters are carbon data recorded in the same units, this should be possible.  The database could have two tables:
+2. **Make the pipeline flexible for adding new raster data to the database** - The NFCMS dataset has multiple interesting rasters.  It would be great if a user could select a new raster, and add the data to the database. As long as the rasters are carbon data recorded in the same units, this should be possible.  The database could have two tables:
     1. `county_info` table with county specific information, for example, these columns:
         - `geoid`: County GEOID (unique identifier)
         - `county_name`: Name of the county
@@ -141,7 +142,7 @@ Here are some of the next steps to improve this pipeline.
           
     2. `carbon_data` table with raster statistics within each county.  This table would have a long, melted format to facilitate adding more raster data on the fly to the same database structure.  For example, columns like these:
         - `geoid`: County GEOID (unique identifier)
-        - `year`: NCFMS dataset has 2020 data and then 2050 and 2070 projections
+        - `year`: NFCMS dataset has 2020 data and then 2050 and 2070 projections
         - `raster_type`: The type of raster summarized, for example AbovegroundBiomass, LiveBiomass, SoilCarbon
         - `total_Tg_CO2e`: Total carbon within the county in Teragrams CO2 equivalent
         - `average_Mg_CO2e_per_acre`: Average carbon per acre in Megagrams CO2 equivalent (metric tons CO2e)  
